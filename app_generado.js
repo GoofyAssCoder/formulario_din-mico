@@ -1,14 +1,14 @@
 "use strict"
 
+/***************Añadimos el formulario dinámicamente***********************/
+
+
 document.addEventListener("DOMContentLoaded", function () {
     //Creamos el formulario:
     const formulario = document.createElement("form");
     formulario.id = "formulario";
 
-    //Creamos la tabla:
-    const tabla = document.createElement("table");
-    formulario.id = "tabla";
-
+    //Creamos los elementos del formulario:
     const labelNombre = document.createElement("label");
     labelNombre.textContent = "Nombre: ";
     const inputNombre = document.createElement("input");
@@ -37,9 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
     inputSueldo.id = "sueldo";
 
     /**********************************************************************/
-    //Crear el campo de texto para la fecha
     const labelFecha = document.createElement("label");
-    labelFecha.textContent = "Fecha (DD/MM/YYYY): ";
+    labelFecha.textContent = "Fecha: ";
     const inputFecha = document.createElement("input");
     inputFecha.type = "text";
     inputFecha.id = "fecha";
@@ -77,7 +76,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    //Agrego elemento al formulario
+    //Agrego elementos al formulario:
+    formulario.appendChild(document.createElement("br"));
+    formulario.appendChild(document.createElement("br"));
     formulario.appendChild(labelNombre);
     formulario.appendChild(inputNombre);
     formulario.appendChild(document.createElement("br"));
@@ -151,5 +152,133 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-});
+    /**********************************************************************************/
+    //Como no me pide hacer la tabla dinámicamente, dejo esto como en el ejercicio anterior:
 
+    class Empleado{
+        #nombre
+        #apellido
+        #nacimiento
+        #sueldo
+        #email
+        #dni
+        #fecha
+    
+        constructor(nombre, apellido, nacimiento, sueldo, email = "", dni = "", fecha = "") {
+            this.#nombre = nombre;
+            this.#apellido = apellido;
+            this.#nacimiento = nacimiento;
+            this.#sueldo = sueldo;
+            this.#email = email;
+            this.#dni = dni;
+            this.#fecha = fecha;
+        }
+        
+    
+        toString(){
+            return `<tr>
+            <td>${this.#nombre}</td>
+            <td>${this.#apellido}</td>
+            <td>${this.#nacimiento}</td>
+            <td>${this.#sueldo}</td>
+            <td>${this.#email}</td>
+            <td>${this.#dni}</td>
+            <td>${this.#fecha}</td>
+            </tr>`;
+        }
+    
+        getNombre(){
+            return this.#nombre;
+        }
+        getApellido(){
+            return this.#apellido;
+        }
+        getNacimiento(){
+            return this.#nacimiento;
+        }
+        getSueldo(){
+            return this.#sueldo;
+        }
+        getEmail(){
+            return this.#email;
+        }
+    
+        getDni(){
+            return this.#dni;
+        }
+    
+        getFecha(){
+            return this.#fecha;
+        }
+    
+        
+        render(){
+            let fila = document.createElement("tr");
+    
+            let nombre = document.createElement("td");
+            let apellido = document.createElement("td");
+            let nacimiento = document.createElement("td");
+            let sueldo = document.createElement("td");
+            let email = document.createElement("td");
+            let dni = document.createElement("td");
+            let fecha = document.createElement("td");
+    
+            nombre.textContent = this.#nombre;
+            apellido.textContent = this.#apellido;
+            nacimiento.textContent = this.#nacimiento;
+            sueldo.textContent = this.#sueldo;
+            email.textContent = this.#email;
+            dni.textContent = this.#dni;
+            fecha.textContent = this.#fecha;
+    
+            fila.appendChild(nombre);
+            fila.appendChild(apellido);
+            fila.appendChild(nacimiento);
+            fila.appendChild(sueldo);
+            fila.appendChild(email);
+            fila.appendChild(dni);
+            fila.appendChild(fecha);
+    
+            return fila;
+        }
+    }
+    
+    let empleados = [
+        new Empleado("Paco","Fiestas",1997,33000, "paco@gmail.com", "71945631Ñ"),
+        new Empleado("Chindas","Vinto",2001,27000, "chindas@vinto.es"),
+        new Empleado("Chingas","Perma",1772,38000),
+        new Empleado("Perma","Trago",1991,74000),
+        new Empleado("Misty","Articuno",1987,37000),
+        new Empleado("Giovanni","Vazquez",1000,20000),
+        new Empleado("Lagartijo","Iguano",1993,54000),
+    ]
+    
+    let tabla = document.getElementById("lista-empleados");
+    empleados.forEach(empleado =>{
+        let fila=empleado.render();
+        tabla.appendChild(fila);
+    });
+    
+    // Evento para añadir empleado:
+    let boton = document.getElementById("formulario-enviar");
+    boton.addEventListener("click", evento => {
+        evento.preventDefault();
+    
+        if (!validarFormulario()) return;
+    
+        let nombre = document.getElementById("nombre").value;
+        let apellido = document.getElementById("apellido").value;
+        let nacimiento = document.getElementById("nacimiento").value;
+        let sueldo = document.getElementById("sueldo").value;
+        let email = document.getElementById("email").value;
+        let dni = document.getElementById("dni").value;
+        let fecha = document.getElementById("fecha").value;
+    
+        let empleado = new Empleado(nombre, apellido, nacimiento, sueldo, email, dni, fecha);
+        empleados.push(empleado);
+    
+        let fila = empleado.render();
+        tabla.appendChild(fila);
+    });
+
+});
